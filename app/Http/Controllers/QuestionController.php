@@ -15,7 +15,6 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
         return QuestionResource::collection(Question::latest()->get());
     }
 
@@ -33,7 +32,7 @@ class QuestionController extends Controller
 
         $question = new Question();
         $question->create($request->all());
-        return response()->json('Created successfully', 200);
+        return response()->json('Created ', 200);
     }
 
     /**
@@ -69,6 +68,11 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
         //
+        //dd($request->all());
+        $question->update($request->all());
+        return response()->json('Updated ', 201);
+
+
     }
 
     /**

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Model\Category;
+use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Str;
 class CategoryController extends Controller
 {
     /**
@@ -15,6 +16,7 @@ class CategoryController extends Controller
     public function index()
     {
         //
+        return CategoryResource::collection(Category::latest()->get());
     }
 
     /**
@@ -36,6 +38,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+
+        $category = new Category;
+        $category->name = $request->name;
+        $category->slug = Str::slug($request->name);
+
+        $category->save();
+
+        return response()->json('Created', 200);
     }
 
     /**
@@ -47,6 +57,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+
+        return new CategoryResource($category);
     }
 
     /**
@@ -58,6 +70,9 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         //
+
+        
+        
     }
 
     /**
@@ -70,6 +85,14 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         //
+        $category->update(
+            [
+            'name' => $request->name,
+            'slug' => Str::slug($request->name)
+            ]
+        );
+
+        return response()->json('updated',201);
     }
 
     /**
@@ -81,5 +104,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
+        $category->delete();
+        return response()->json(null, 204);
     }
 }
