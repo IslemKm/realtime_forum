@@ -8,6 +8,7 @@ class Reply extends Model
 {
     //
 
+    protected $guarded = [];
     public function likes()
     {
         return $this->hasMany('App\Model\Like');

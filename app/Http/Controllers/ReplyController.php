@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Model\Reply;
+use App\Model\Question;
+use App\Http\Resources\ReplyResource;
 use Illuminate\Http\Request;
 
 class ReplyController extends Controller
@@ -12,9 +14,13 @@ class ReplyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Question $question)
     {
         //
+
+        return ReplyResource::collection($question->replies);
+
+
     }
 
     /**
@@ -23,8 +29,9 @@ class ReplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
+
     {
-        //
+       
     }
 
     /**
@@ -33,9 +40,14 @@ class ReplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Question $question,Request $request)
     {
         //
+        
+
+        $reply = $question->replies()->create($request->all());
+
+        return response()->json(['reply' => $question->replies()->find($reply->id)],201);
     }
 
     /**
@@ -44,9 +56,10 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function show(Reply $reply)
+    public function show(Question $question,Reply $reply)
     {
         //
+       return new ReplyResource($reply);
     }
 
     /**
@@ -67,9 +80,13 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reply $reply)
+    public function update(Question $question, Reply $reply,Request $request)
     {
         //
+       
+        $reply->update($request->except(['id']));
+
+        return response()->json('Updated',201);
     }
 
     /**
@@ -78,8 +95,12 @@ class ReplyController extends Controller
      * @param  \App\Model\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reply $reply)
+    public function destroy(Question $question,Reply $reply)
     {
         //
+
+        $reply->delete($reply);
+
+        return response()->json(null,203);
     }
 }
