@@ -8,6 +8,7 @@ class Like extends Model
 {
     //
 
+    protected $guarded = [];
     public function reply()
     {
         return $this->belongsTo('App\Model\Reply');
